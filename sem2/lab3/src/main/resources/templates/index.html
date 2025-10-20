@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Библиотека</title>
+</head>
+<body>
+<h1>Библиотека</h1>
+
+<ul>
+    <li th:each="book : ${books}">
+        <span th:text="${book.title}"></span> -
+        <span th:text="${book.author}"></span> -
+        <span th:text="${book.genre}"></span> -
+        <span th:text="${book.available ? 'Доступна' : 'Выдана'}"></span>
+        
+        <span th:if="${book.returnDate != null}" 
+              th:text="'Срок возврата: ' + ${#temporals.format(book.returnDate, 'dd.MM.yyyy')}"></span>
+        
+        <a th:href="@{/deleteBook/{id}(id=${book.id})}">Удалить</a>
+        
+        <form th:action="@{/updateBook/{id}(id=${book.id})}" method="post" style="display:inline;">
+            <input type="hidden" name="available" th:value="${!book.available}" />
+            <button type="submit" th:text="${book.available ? 'Выдать' : 'Вернуть'}"></button>
+        </form>
+    </li>
+</ul>
+
+<h2>Добавить новую книгу</h2>
+<form th:action="@{/addBook}" method="post">
+    <label for="title">Название:</label>
+    <input type="text" id="title" name="title" required>
+    
+    <label for="author">Автор:</label>
+    <input type="text" id="author" name="author" required>
+    
+    <label for="genre">Жанр:</label>
+    <input type="text" id="genre" name="genre">
+    
+    <button type="submit">Добавить книгу</button>
+</form>
+
+</body>
+</html>
