@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Библиотека</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1, h2 { margin-bottom: 10px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 15px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f3f3f3; }
+    </style>
+</head>
+<body>
+
+<h1>Библиотека</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>Название</th>
+            <th>Автор</th>
+            <th>Жанр</th>
+            <th>Статус</th>
+            <th>Дата возврата</th>
+            <th>История</th>
+            <th>Удалить</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.title}"></td>
+            <td th:text="${book.author}"></td>
+            <td th:text="${book.genre}"></td>
+
+            <td th:text="${book.available ? 'Доступна' : 'Выдана'}"></td>
+
+            <td th:text="${book.returnDate != null ? #temporals.format(book.returnDate, 'dd.MM.yyyy') : '-'}"></td>
+
+            <td>
+                <a th:href="@{/book/{id}/history(id=${book.id})}">История выдач</a>
+            </td>
+
+            <td>
+                <a th:href="@{/deleteBook/{id}(id=${book.id})}">Удалить</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>Добавить новую книгу</h2>
+
+<form th:action="@{/addBook}" method="post">
+    <label>Название:</label>
+    <input type="text" name="title" required>
+
+    <label>Автор:</label>
+    <input type="text" name="author" required>
+
+    <label>Жанр:</label>
+    <input type="text" name="genre">
+
+    <button type="submit">Добавить</button>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>История выдач</title>
+</head>
+<body>
+
+<h1 th:text="'История выдач: ' + ${book.title}"></h1>
+
+<ul>
+    <li th:each="r : ${records}">
+        <span th:text="${r.borrowerName}"></span> —
+        <span th:text="${#temporals.format(r.borrowDate, 'dd.MM.yyyy')}"></span>
+
+        <span th:if="${r.returned}" th:text="'Возврат: ' + ${#temporals.format(r.returnDate, 'dd.MM.yyyy')}"></span>
+        <span th:if="${!r.returned}">не возвращено</span>
+
+        <form th:action="@{/record/{id}/return(id=${r.id})}" method="post" th:if="${!r.returned}">
+            <button type="submit">Принять возврат</button>
+        </form>
+    </li>
+</ul>
+
+<h2 th:if="${book.available}">Выдать книгу</h2>
+
+<form th:if="${book.available}"
+      th:action="@{/book/{id}/borrow(id=${book.id})}" method="post">
+    <label>Читатель:</label>
+    <input type="text" name="borrower" required>
+    <button type="submit">Выдать</button>
+</form>
+
+<h2 th:if="${!book.available}" style="color:red;">Книга сейчас выдана</h2>
+
+<a href="/">Назад</a>
+
+</body>
+</html>
